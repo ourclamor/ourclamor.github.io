@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
 <head>
     <meta charset='utf-8' />
@@ -168,4 +169,176 @@
   <div id='map'></div>
   
   </body>
+=======
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Water-related conflicts LA</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%;height: 100%}
+
+        .legend {
+        background-color: #fff;
+        border-radius: 3px;
+        bottom: 30px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        padding: 10px;
+        position: absolute;
+        right: 10px;
+        z-index: 1;
+         }
+      .legend h4 {
+        margin: 0 0 10px;
+         }
+      .legend p {
+        margin-left: 30px;
+        position: absolute;
+        display: block;
+        top: 0;
+         }
+      .legend div {
+        position: relative;
+        }
+      .legend div span {
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+        opacity: 0.8;
+        background-color: #d49a66;
+      }
+      .map-overlay {
+          font: 10px/15px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+          position: absolute;
+          width: 35%;
+          top: 0;
+          left: 0;
+          padding: 5px;
+          z-index: 100;
+      }
+      .map-overlay-inner {
+          background-color: #fff;
+          box-shadow:0 1px 2px rgba(0, 0, 0, 0.20);
+          border-radius: 3px;
+          padding: 10px;
+          margin-bottom: 10px;
+      }
+      .map-overlay input {
+          background-color: transparent;
+          display: inline-block;
+          width: 100%;
+          position: relative;
+          margin: 0;
+          cursor: ew-resize;
+      }
+      
+   </style>
+ 
+  <script>
+   $(document).ready(function() {
+
+  var ConflictStage=  ["Unavailable","Latent","Emergent","Manifest, non-violent","Manifest, violent","Stalement","Aftermath"];
+  var colorStage=  ['#b3b3b3', '#5dade2', '#1abc9c', '#f7dc6f','#d35400 ', '#884ea0', '#34495e'];
+
+     mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhbW9yIiwiYSI6ImNqY2pnc2Q4MTJqNWMyd3JxYmtzamg4ZmQifQ.0aHy_xLkHpkHXy4u2zIdZQ';
+     var map = new mapboxgl.Map({
+         container: 'map',
+         style: 'mapbox://styles/clamor/cjdqbst541bwc2rlp75uc692a',
+         center: [-89.872,-13.435],
+         zoom:  2,
+         hash:true,
+         pitch: 0
+     });
+
+
+        map.addControl(new mapboxgl.NavigationControl());
+  
+                 map.on('load', function() {
+                 map.addSource("conflicts_source", {
+                    type:"vector",
+
+                    url:"mapbox://clamor.7keiz6d5"
+                }); 
+          
+
+                 map.addLayer({
+                    id:"conflicts",
+                    type:"circle",
+                    source:"conflicts_source",
+                    'source-layer':"CoordinatesClean-dpth1m",
+
+                    paint: {
+                          'circle-radius': 4,
+                          'circle-color': {
+                            property: "Stage of the conflict",
+                            type: 'categorical',
+                            stops: [
+                            [ConflictStage[0], colorStage[0]],
+                            [ConflictStage[1], colorStage[1]],
+                            [ConflictStage[2], colorStage[2]],
+                            [ConflictStage[3], colorStage[3]],
+                            [ConflictStage[4], colorStage[4]],
+                            [ConflictStage[5], colorStage[5]],
+                            [ConflictStage[6], colorStage[6]]
+                            ]
+                          },
+                          'circle-opacity': 1
+                        }
+                        ,filter:['==', 'Stage of the conflict', ConflictStage[0]]
+  
+                  }); 
+
+
+
+                  creaLeyenda();
+
+
+                $('#slider').on('change',function(e){
+                  filtraStage($(this).val());
+                });
+          });
+  
+
+  function creaLeyenda(){
+      for(i=0; i < ConflictStage.length;i++){
+              jQuery('#legend').append(
+              '<div><span style="background-color:'+colorStage[i]+';width:10px;height:10px;margin: 0 5px"></span>'+ConflictStage[i]+'</div>'
+              );
+      }
+  }
+
+
+  function filtraStage(numStage){
+        var filters = ['==', 'Description State of the Conflict', ConflictStage[numStage]];
+        map.setFilter('conflicts', filters);
+        document.getElementById('ConflictStageid').textContent = ConflictStage[numStage];
+  }
+  
+  }); 
+
+  </script>
+  </head>
+  <body>
+  
+  <div id='legend' class='legend'>
+      <h4>Conflicts</h4>
+    </div>
+
+  <div class='map-overlay'>
+        <div class='map-overlay-inner'>
+            <h4>Conflicts per stage of the conflict</h4>
+            <label id='ConflictStageid'></label>
+            <input id='slider' type='range' min='0' max='6' step='1' value='0' />
+        </div>
+    </div>
+
+  <div id='map'></div>
+  
+  </body>
+>>>>>>> 22e802b219881a1c520072c88042c25f0a12b108
   </html>
